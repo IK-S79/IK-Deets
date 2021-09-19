@@ -3,10 +3,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IK_Deets"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
+        Title="MainWindow" Height="720" Width="640">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Command="New" />
+                <MenuItem Command="Open" />
+                <MenuItem Command="Save" />
+                <Separator />
+                <MenuItem Header="_Exit" />
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Header="_Manage users" IsCheckable="True" IsChecked="True" />
+            </MenuItem>
+        </Menu>
         
-    </Grid>
+        <TabControl DockPanel.Dock="Top">
+            <TabItem Header="Database Viewer">
+                <Grid>
+                    <StackPanel>
+                        <TextBox Margin="0, 0, 0, 5" Name="TextBox"></TextBox>
+                        <DataGrid Name="PlayerGrid"
+                                  ItemsSource="{Binding}"
+                                  AutoGenerateColumns="True"
+                                  AlternatingRowBackground="LightBlue" 
+                                  AlternationCount="2">
+                        </DataGrid>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Graphs" />
+            <TabItem Header="Details" />
+        </TabControl>
+    </DockPanel>
 </Window>
