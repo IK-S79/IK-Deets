@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="640">
+        Title="MainWindow" Height="1080" Width="1300">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -18,19 +18,46 @@
                 <MenuItem Header="_Manage users" IsCheckable="True" IsChecked="True" />
             </MenuItem>
         </Menu>
-        
+
         <TabControl DockPanel.Dock="Top">
             <TabItem Header="Database Viewer">
                 <Grid>
-                    <StackPanel>
-                        <TextBox Margin="0, 0, 0, 5" Name="TextBox"></TextBox>
-                        <DataGrid Name="PlayerGrid"
-                                  ItemsSource="{Binding}"
-                                  AutoGenerateColumns="True"
-                                  AlternatingRowBackground="LightBlue" 
-                                  AlternationCount="2">
-                        </DataGrid>
-                    </StackPanel>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <DataGrid Grid.Column="0"
+                              Name="PlayerGrid"
+                              ItemsSource="{Binding}"
+                              AutoGenerateColumns="True"
+                              AlternatingRowBackground="LightBlue"
+                              AlternationCount="2" />
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Server Search: " VerticalAlignment="Stretch" />
+                            <Label Grid.Row="1" Grid.Column="0" Content="Name Search: " VerticalAlignment="Stretch" />
+
+                            <ComboBox Grid.Row="0" Grid.Column="1" 
+                                      Name="ServerSelectionComboBox"
+                                      ItemsSource="{Binding}"
+                                      DropDownClosed="ServerSelectionComboBox_OnDropDownClosed"
+                                      VerticalAlignment="Stretch" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Name="NameSearchTextBox" VerticalAlignment="Stretch" />
+                        </Grid>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Graphs" />
