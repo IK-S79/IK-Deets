@@ -35,10 +35,10 @@
 
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
+                            <RowDefinition Height="275" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
+                        <Grid Grid.Row="0" Name="FilterControlsGrid">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
@@ -46,16 +46,80 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="Server Search: " VerticalAlignment="Stretch" />
-                            <Label Grid.Row="1" Grid.Column="0" Content="Name Search: " VerticalAlignment="Stretch" />
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Content="Server Search: "
+                                   VerticalAlignment="Stretch" />
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Content="Name Search: "
+                                   VerticalAlignment="Stretch" />
+                            <Label Grid.Row="2" Grid.Column="0"
+                                   Content="Alliance Search: "
+                                   VerticalAlignment="Stretch" />
+                            <Label Grid.Row="3" Grid.Column="0"
+                                   Content="Rank Search: "
+                                   VerticalAlignment="Stretch" />
+                            <Label Grid.Row="4" Grid.Column="0"
+                                   Content="Troop Power Search: "
+                                   VerticalAlignment="Stretch" />
+                            <Label Grid.Row="5" Grid.Column="0"
+                                   Content="Highest Power Search: "
+                                   VerticalAlignment="Stretch" />
+                            <Label Grid.Row="6" Grid.Column="0"
+                                   Content="Tech Contributions Search: "
+                                   VerticalAlignment="Stretch" />
+                            <Label Grid.Row="7" Grid.Column="0"
+                                   Content="Defeat Search: "
+                                   VerticalAlignment="Stretch" />
+                            <Label Grid.Row="8" Grid.Column="0"
+                                   Content="Dismantle Durability Search: "
+                                   VerticalAlignment="Stretch" />
 
-                            <ComboBox Grid.Row="0" Grid.Column="1" 
+                            <ComboBox Grid.Row="0" Grid.Column="1"
                                       Name="ServerSelectionComboBox"
                                       ItemsSource="{Binding}"
-                                      DropDownClosed="ServerSelectionComboBox_OnDropDownClosed"
                                       VerticalAlignment="Stretch" />
-                            <TextBox Grid.Row="1" Grid.Column="1" Name="NameSearchTextBox" VerticalAlignment="Stretch" />
+                            <TextBox Grid.Row="1" Grid.Column="1"
+                                     Name="NameSearchTextBox"
+                                     VerticalAlignment="Stretch" />
+                            <ComboBox Grid.Row="2" Grid.Column="1"
+                                      Name="AllianceSelectionComboBox"
+                                      ItemsSource="{Binding}"
+                                      VerticalAlignment="Stretch" />
+                            <ComboBox Grid.Row="3" Grid.Column="1"
+                                      Name="RankSelectionComboBox"
+                                      ItemsSource="{Binding}"
+                                      VerticalAlignment="Stretch" />
+                            <TextBox Grid.Row="4" Grid.Column="1"
+                                     Name="TroopPowerSearchTextBox"
+                                     VerticalAlignment="Stretch" />
+                            <TextBox Grid.Row="5" Grid.Column="1"
+                                     Name="HighestPowerSearchTextBox"
+                                     VerticalAlignment="Stretch" />
+                            <TextBox Grid.Row="6" Grid.Column="1"
+                                     Name="TechContributionsSearchTextBox"
+                                     VerticalAlignment="Stretch" />
+                            <TextBox Grid.Row="7" Grid.Column="1"
+                                     Name="DefeatSearchTextBox"
+                                     VerticalAlignment="Stretch" />
+                            <TextBox Grid.Row="8" Grid.Column="1"
+                                     Name="DismantleDurabilitySearchTextBox"
+                                     VerticalAlignment="Stretch" />
+
+                            <Button Grid.Row="10" Grid.Column="1"
+                                    Name="FilterButton"
+                                    Content="Filter"
+                                    VerticalAlignment="Stretch"
+                                    Click="FilterButton_OnClick"/>
                         </Grid>
                     </Grid>
                 </Grid>
