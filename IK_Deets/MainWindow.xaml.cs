@@ -31,8 +31,6 @@ namespace IK_Deets
 
             _playerCollection = _database.GetCollection<IPlayer>("data", "players");
 
-            List<IPlayer> documents = _playerCollection.Find(FilterDefinition<IPlayer>.Empty).ToList();
-
             List<ushort> servers = _playerCollection.Distinct<ushort>("server", FilterDefinition<IPlayer>.Empty)
                                                     .ToList();
             List<string> alliances = _playerCollection.Distinct<string>("alliance", FilterDefinition<IPlayer>.Empty)
@@ -78,10 +76,10 @@ namespace IK_Deets
             UpdatePlayerGridFilter();
         }
 
-        private void UpdatePlayerGridFilter()
+        private async void UpdatePlayerGridFilter()
         {
             // Lock all controls so that there are no issues with filter queries running concurrently
-            FilterControlsGrid.IsEnabled = false;
+            DockPanel.IsEnabled = false;
 
             _dataTable.Rows.Clear();
 
@@ -143,13 +141,14 @@ namespace IK_Deets
             //     filter &= filterBuilder.Where(player => player.SubmissionDateTime == DatePicker.SelectedDate!.Value);
             // }
 
-            List<IPlayer>? list = _playerCollection.Find(filter).ToList();
+            IAsyncCursor<IPlayer>? temp = await _playerCollection.FindAsync(filter);
+            List<IPlayer>?         list = temp.ToList();
 
             if (DatePicker.SelectedDate != null)
             {
                 ConcurrentBag<IPlayer> filteredPlayers    = new();
                 DateTime               datePickerDateTime = DatePicker.SelectedDate.GetValueOrDefault();
-
+                
                 Parallel.ForEach(list, player =>
                 {
                     if (player.SubmissionDateTime.Date == datePickerDateTime)
@@ -178,7 +177,7 @@ namespace IK_Deets
             _dataTable.AcceptChanges();
 
             // Unlock all controls
-            FilterControlsGrid.IsEnabled = true;
+            DockPanel.IsEnabled = true;
         }
 
         private void FilterButton_OnClick(object sender, RoutedEventArgs e)

@@ -7,7 +7,7 @@
         xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
         Title="MainWindow" Height="1080" Width="1300">
-    <DockPanel>
+    <DockPanel Name="DockPanel">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Command="New" />
