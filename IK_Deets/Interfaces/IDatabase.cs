@@ -16,6 +16,6 @@ namespace IK_Deets.Interfaces
 
         public IMongoDatabase GetDatabase(string database);
 
-        public IMongoCollection<T> GetCollection<T>(string database, string collection) where T : BsonDocument;
+        public IMongoCollection<T> GetCollection<T>(string database, string collection);
     }
 }

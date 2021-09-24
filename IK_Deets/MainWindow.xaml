@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
         Title="MainWindow" Height="1080" Width="1300">
     <DockPanel>
@@ -35,27 +37,27 @@
 
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="275" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Name="FilterControlsGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
                             <Label Grid.Row="0" Grid.Column="0"
                                    Content="Server Search: "
                                    VerticalAlignment="Stretch" />
@@ -114,9 +116,31 @@
                             <TextBox Grid.Row="8" Grid.Column="1"
                                      Name="DismantleDurabilitySearchTextBox"
                                      VerticalAlignment="Stretch" />
-
-                            <Button Grid.Row="10" Grid.Column="1"
-                                    Name="FilterButton"
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="1" Grid.Column="0" 
+                                   Content="Pick a date: "
+                                   VerticalAlignment="Top"/>
+                            <DatePicker Grid.Row="1" Grid.Column="1" 
+                                        Name="DatePicker"
+                                        VerticalAlignment="Top">
+                                <DatePicker.BlackoutDates>
+                                    <CalendarDateRange 
+                                        Start="{x:Static System:DateTime.Today}"
+                                        End="{x:Static System:DateTime.MaxValue}"/>
+                                </DatePicker.BlackoutDates>
+                            </DatePicker>
+                            <Button Grid.Row="3" Grid.Column="1"
                                     Content="Filter"
                                     VerticalAlignment="Stretch"
                                     Click="FilterButton_OnClick"/>

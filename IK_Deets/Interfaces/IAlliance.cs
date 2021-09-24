@@ -3,6 +3,7 @@
 // Solution: IK_Deets
 
 using System.Collections.Concurrent;
+using MongoDB.Bson;
 
 namespace IK_Deets.Interfaces
 {
@@ -52,7 +53,7 @@ namespace IK_Deets.Interfaces
     /// </summary>
     public interface IAlliance
     {
-        string DatabaseID
+        ObjectId DatabaseID
         {
             get;
             set;
@@ -64,7 +65,7 @@ namespace IK_Deets.Interfaces
             set;
         }
 
-        string Tag
+        string? Tag
         {
             get;
             set;
@@ -81,7 +82,7 @@ namespace IK_Deets.Interfaces
         /// <remarks>
         /// Accessible by multiple threads concurrently
         /// </remarks>
-        ConcurrentDictionary<string, IPlayer> Players
+        ConcurrentDictionary<string, IPlayer>? Players
         {
             get;
             set;

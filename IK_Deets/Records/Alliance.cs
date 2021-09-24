@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using IK_Deets.Interfaces;
+using MongoDB.Bson;
 
 namespace IK_Deets.Records
 {
@@ -21,34 +22,34 @@ namespace IK_Deets.Records
             get;
         }
 
-        public int R6 => Alliance.Players.Values.Count(player => player.Rank == AllianceRank.R6);
-        public int R5 => Alliance.Players.Values.Count(player => player.Rank == AllianceRank.R5);
-        public int R4 => Alliance.Players.Values.Count(player => player.Rank == AllianceRank.R4);
-        public int R3 => Alliance.Players.Values.Count(player => player.Rank == AllianceRank.R3);
-        public int R2 => Alliance.Players.Values.Count(player => player.Rank == AllianceRank.R2);
-        public int R1 => Alliance.Players.Values.Count(player => player.Rank == AllianceRank.R1);
+        public int R6 => Alliance.Players?.Values.Count(player => player.Rank == AllianceRank.Leader) ?? 0;
+        public int R5 => Alliance.Players?.Values.Count(player => player.Rank == AllianceRank.Officer) ?? 0;
+        public int R4 => Alliance.Players?.Values.Count(player => player.Rank == AllianceRank.Backbones) ?? 0;
+        public int R3 => Alliance.Players?.Values.Count(player => player.Rank == AllianceRank.Elites) ?? 0;
+        public int R2 => Alliance.Players?.Values.Count(player => player.Rank == AllianceRank.Members) ?? 0;
+        public int R1 => Alliance.Players?.Values.Count(player => player.Rank == AllianceRank.Newbies) ?? 0;
     }
 
     /// <inheritdoc cref="IK_Deets.Interfaces.IAlliance" />
     public record Alliance : IAlliance
     {
-        private string _tag;
+        private string? _tag;
 
         public Alliance(string name,
-                        string tag,
+                        string? tag,
                         ushort server,
-                        string databaseID = null,
-                        ConcurrentDictionary<string, IPlayer> players = null)
+                        ObjectId databaseID = default,
+                        ConcurrentDictionary<string, IPlayer> players = null!)
         {
             DatabaseID         = databaseID;
             Name               = name;
             Tag                = tag;
             Server             = server;
-            Players            = players ?? new ConcurrentDictionary<string, IPlayer>();
+            Players            = players;
             MemberDistribution = new MemberDistribution(this);
         }
 
-        public string DatabaseID
+        public ObjectId DatabaseID
         {
             get;
             set;
@@ -61,12 +62,14 @@ namespace IK_Deets.Records
         }
 
         // TODO: Check if the in-game tags can contain square brackets
-        public string Tag
+        public string? Tag
         {
             get => _tag;
             set
             {
-                if (!value.StartsWith("[") || !value.EndsWith("]"))
+                if (value == null) return;
+                
+                if (value.StartsWith("[") || value.EndsWith("]"))
                 {
                     _tag = '[' + value + ']';
                 }
@@ -82,13 +85,13 @@ namespace IK_Deets.Records
             get;
         }
 
-        public ConcurrentDictionary<string, IPlayer> Players
+        public ConcurrentDictionary<string, IPlayer>? Players
         {
             get;
             set;
         }
 
-        public int MemberCount => Players.Count;
+        public int MemberCount => Players?.Count ?? 0;
 
         public IMemberDistribution MemberDistribution
         {

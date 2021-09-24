@@ -36,7 +36,7 @@ namespace IK_Deets.Database
             return _client.GetDatabase(name);
         }
 
-        public IMongoCollection<T> GetCollection<T>(string database, string collection) where T : BsonDocument
+        public IMongoCollection<T> GetCollection<T>(string database, string collection)
         {
             return _client.GetDatabase(database).GetCollection<T>(collection);
         }

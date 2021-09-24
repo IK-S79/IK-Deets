@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows;
 using IK_Deets.Interfaces;
 using IK_Deets.Records;
-using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace IK_Deets
@@ -17,18 +18,26 @@ namespace IK_Deets
     /// </summary>
     public partial class MainWindow
     {
-        private readonly DataTable                      _dataTable = new("PlayerDataTable");
-        private readonly Database.Database              _database  = new();
-        private readonly IMongoCollection<BsonDocument> _playerCollection;
+        private readonly DataTable                 _dataTable;
+        private readonly Database.Database         _database;
+        private readonly IMongoCollection<IPlayer> _playerCollection;
 
         public MainWindow()
         {
-            _playerCollection = _database.GetCollection<BsonDocument>("data", "players");
-            List<BsonDocument> documents = _playerCollection.Find(new BsonDocument()).ToList();
+            BsonClassMap.RegisterClassMap<Player>();
 
-            List<int>    servers   = _playerCollection.Distinct<int>("server", new BsonDocument()).ToList();
-            List<string> alliances = _playerCollection.Distinct<string>("alliance", new BsonDocument()).ToList();
-            List<string> ranks     = _playerCollection.Distinct<string>("rank", new BsonDocument()).ToList();
+            _database  = new Database.Database();
+            _dataTable = new DataTable("PlayerDataTable");
+
+            _playerCollection = _database.GetCollection<IPlayer>("data", "players");
+
+            List<IPlayer> documents = _playerCollection.Find(FilterDefinition<IPlayer>.Empty).ToList();
+
+            List<ushort> servers = _playerCollection.Distinct<ushort>("server", FilterDefinition<IPlayer>.Empty)
+                                                    .ToList();
+            List<string> alliances = _playerCollection.Distinct<string>("alliance", FilterDefinition<IPlayer>.Empty)
+                                                      .ToList();
+            List<string> ranks = _playerCollection.Distinct<string>("rank", FilterDefinition<IPlayer>.Empty).ToList();
 
             servers.Insert(0, 0);
             alliances.Insert(0, "All");
@@ -46,13 +55,16 @@ namespace IK_Deets
             _dataTable.Columns.Add("Time");
 
             // TODO: Create POCO mapping
-            // foreach (BsonDocument document in documents)
-            // {
-            //     _dataTable.Rows.Add(document[1], document[2], document[3], document[4], document[5], document[6],
-            //                         document[7], document[8], document[9], document[10]);
-            // }
+            _playerCollection.Find(FilterDefinition<IPlayer>.Empty)
+                             .ForEachAsync(player => _dataTable.Rows.Add(player.Name, player.Server, player.Name,
+                                                                         player.Rank.ToString(), player.TroopPower,
+                                                                         player.HighestPower, player.TechContributions,
+                                                                         player.Defeat, player.DismantleDurability,
+                                                                         player.SubmissionDateTime));
 
             InitializeComponent();
+
+            DatePicker.SelectedDate = DateTime.Now.AddDays(-1);
 
             PlayerGrid.DataContext                = _dataTable;
             ServerSelectionComboBox.DataContext   = servers;
@@ -62,69 +74,106 @@ namespace IK_Deets
             ServerSelectionComboBox.SelectedIndex   = 0;
             AllianceSelectionComboBox.SelectedIndex = 0;
             RankSelectionComboBox.SelectedIndex     = 0;
-            
+
             UpdatePlayerGridFilter();
         }
 
-        private async void UpdatePlayerGridFilter()
+        private void UpdatePlayerGridFilter()
         {
             // Lock all controls so that there are no issues with filter queries running concurrently
             FilterControlsGrid.IsEnabled = false;
-            
+
             _dataTable.Rows.Clear();
 
-            FilterDefinitionBuilder<BsonDocument> filterBuilder = Builders<BsonDocument>.Filter;
-            FilterDefinition<BsonDocument>        filter        = FilterDefinition<BsonDocument>.Empty;
+            FilterDefinitionBuilder<IPlayer> filterBuilder = Builders<IPlayer>.Filter;
+            FilterDefinition<IPlayer>        filter        = FilterDefinition<IPlayer>.Empty;
 
             if (ServerSelectionComboBox.Text != string.Empty && ServerSelectionComboBox.Text != "0")
             {
-                filter &= filterBuilder.Eq("server", int.Parse(ServerSelectionComboBox.Text));
+                filter &= filterBuilder.Eq(player => player.Server, ushort.Parse(ServerSelectionComboBox.Text));
             }
 
             if (NameSearchTextBox.Text != string.Empty)
             {
-                filter &= filterBuilder.Eq("name", NameSearchTextBox.Text);
+                filter &= filterBuilder.Eq(player => player.Name, NameSearchTextBox.Text);
             }
 
             if (AllianceSelectionComboBox.Text != string.Empty && AllianceSelectionComboBox.Text != "All")
             {
-                filter &= filterBuilder.Eq("alliance", AllianceSelectionComboBox.Text);
-            }
-            
-            if (RankSelectionComboBox.Text != string.Empty && RankSelectionComboBox.Text != "All")
-            {
-                filter &= filterBuilder.Eq("rank", RankSelectionComboBox.Text);
-            }
-            
-            if (TroopPowerSearchTextBox.Text != string.Empty)
-            {
-                filter &= filterBuilder.Gte("troop_power", int.Parse(TroopPowerSearchTextBox.Text));
-            }
-            
-            if (HighestPowerSearchTextBox.Text != string.Empty)
-            {
-                filter &= filterBuilder.Gte("lord_power", int.Parse(HighestPowerSearchTextBox.Text));
-            }
-            
-            if (TechContributionsSearchTextBox.Text != string.Empty)
-            {
-                filter &= filterBuilder.Gte("tech_contributions", int.Parse(TechContributionsSearchTextBox.Text));
-            }
-            
-            if (DefeatSearchTextBox.Text != string.Empty)
-            {
-                filter &= filterBuilder.Gte("defeat", int.Parse(DefeatSearchTextBox.Text));
-            }
-            
-            if (DismantleDurabilitySearchTextBox.Text != string.Empty)
-            {
-                filter &= filterBuilder.Gte("dismantle", int.Parse(DismantleDurabilitySearchTextBox.Text));
+                filter &= filterBuilder.Eq(player => player.Alliance, AllianceSelectionComboBox.Text);
             }
 
-            await _playerCollection.Find(filter)
-                                   .ForEachAsync(document => _dataTable.Rows.Add(document[1], document[2], document[3],
-                                                     document[4], document[5], document[6], document[7],
-                                                     document[8], document[9], document[10]));
+            if (RankSelectionComboBox.Text != string.Empty && RankSelectionComboBox.Text != "All")
+            {
+                Enum.TryParse(RankSelectionComboBox.Text, out AllianceRank rank);
+                filter &= filterBuilder.Eq(player => player.Rank, rank);
+            }
+
+            if (TroopPowerSearchTextBox.Text != string.Empty)
+            {
+                filter &= filterBuilder.Gte(player => player.TroopPower, uint.Parse(TroopPowerSearchTextBox.Text));
+            }
+
+            if (HighestPowerSearchTextBox.Text != string.Empty)
+            {
+                filter &= filterBuilder.Gte(player => player.HighestPower, uint.Parse(HighestPowerSearchTextBox.Text));
+            }
+
+            if (TechContributionsSearchTextBox.Text != string.Empty)
+            {
+                filter &= filterBuilder.Gte(player => player.TechContributions,
+                                            uint.Parse(TechContributionsSearchTextBox.Text));
+            }
+
+            if (DefeatSearchTextBox.Text != string.Empty)
+            {
+                filter &= filterBuilder.Gte(player => player.Defeat, uint.Parse(DefeatSearchTextBox.Text));
+            }
+
+            if (DismantleDurabilitySearchTextBox.Text != string.Empty)
+            {
+                filter &= filterBuilder.Gte(player => player.DismantleDurability,
+                                            uint.Parse(DismantleDurabilitySearchTextBox.Text));
+            }
+
+            // TODO: Figure out why this isn't working
+            // if (DatePicker.Text != string.Empty)
+            // {
+            //     filter &= filterBuilder.Eq(player => player.SubmissionDateTime.ToUniversalTime().Date, DatePicker.SelectedDate!.Value.Date);
+            //     filter &= filterBuilder.Where(player => player.SubmissionDateTime == DatePicker.SelectedDate!.Value);
+            // }
+
+            List<IPlayer>? list = _playerCollection.Find(filter).ToList();
+
+            if (DatePicker.SelectedDate != null)
+            {
+                ConcurrentBag<IPlayer> filteredPlayers    = new();
+                DateTime               datePickerDateTime = DatePicker.SelectedDate.GetValueOrDefault();
+
+                Parallel.ForEach(list, player =>
+                {
+                    if (player.SubmissionDateTime.Date == datePickerDateTime)
+                    {
+                        filteredPlayers.Add(player);
+                    }
+                });
+
+                foreach (IPlayer player in filteredPlayers)
+                {
+                    _dataTable.Rows.Add(player.Name, player.Server, player.Name, player.Rank.ToString(),
+                                        player.TroopPower, player.HighestPower, player.TechContributions, player.Defeat,
+                                        player.DismantleDurability, player.SubmissionDateTime);
+                }
+            }
+            else
+            {
+                foreach (IPlayer player in list)
+                {
+                    _dataTable.Rows.Add(player.Name, player.Server, player.Name, player.Rank.ToString(),
+                                        player.TroopPower, player.HighestPower, player.TechContributions, player.Defeat,
+                                        player.DismantleDurability, player.SubmissionDateTime);
+                }
+            }
 
             _dataTable.AcceptChanges();
 
