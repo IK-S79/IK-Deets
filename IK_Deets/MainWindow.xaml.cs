@@ -2,13 +2,13 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows;
 using IK_Deets.Interfaces;
 using IK_Deets.Records;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace IK_Deets
@@ -19,22 +19,20 @@ namespace IK_Deets
     public partial class MainWindow
     {
         private readonly DataTable                 _dataTable;
-        private readonly Database.Database         _database;
         private readonly IMongoCollection<IPlayer> _playerCollection;
 
         public MainWindow()
         {
+            BsonSerializer.RegisterSerializer(new EnumSerializer<AllianceRank>(BsonType.String));
             BsonClassMap.RegisterClassMap<Player>();
 
-            _database  = new Database.Database();
+            Database.Database database = new();
             _dataTable = new DataTable("PlayerDataTable");
 
-            _playerCollection = _database.GetCollection<IPlayer>("data", "players");
+            _playerCollection = database.GetCollection<IPlayer>("data", "players");
 
-            List<ushort> servers = _playerCollection.Distinct<ushort>("server", FilterDefinition<IPlayer>.Empty)
-                                                    .ToList();
-            List<string> alliances = _playerCollection.Distinct<string>("alliance", FilterDefinition<IPlayer>.Empty)
-                                                      .ToList();
+            List<ushort> servers = _playerCollection.Distinct<ushort>("server", FilterDefinition<IPlayer>.Empty).ToList();
+            List<string> alliances = _playerCollection.Distinct<string>("alliance", FilterDefinition<IPlayer>.Empty).ToList();
             List<string> ranks = _playerCollection.Distinct<string>("rank", FilterDefinition<IPlayer>.Empty).ToList();
 
             servers.Insert(0, 0);

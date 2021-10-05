@@ -28,124 +28,170 @@
                         <ColumnDefinition Width="3*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <DataGrid Grid.Column="0"
-                              Name="PlayerGrid"
-                              ItemsSource="{Binding}"
-                              AutoGenerateColumns="True"
-                              AlternatingRowBackground="LightBlue"
-                              AlternationCount="2" />
-
+                    <GroupBox Grid.Column="0" Header="Information">
+                        <DataGrid
+                            Name="PlayerGrid"
+                            ItemsSource="{Binding}"
+                            AutoGenerateColumns="True"
+                            AlternatingRowBackground="LightBlue"
+                            AlternationCount="2" />
+                    </GroupBox>
                     <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Name="FilterControlsGrid">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0"
+                            <GroupBox Grid.Row="0" Header="Data Filter Settings">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0"
                                    Content="Server Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
-                            <Label Grid.Row="1" Grid.Column="0"
+                                <Label Grid.Row="1" Grid.Column="0"
                                    Content="Name Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
-                            <Label Grid.Row="2" Grid.Column="0"
+                                <Label Grid.Row="2" Grid.Column="0"
                                    Content="Alliance Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
-                            <Label Grid.Row="3" Grid.Column="0"
+                                <Label Grid.Row="3" Grid.Column="0"
                                    Content="Rank Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
-                            <Label Grid.Row="4" Grid.Column="0"
+                                <Label Grid.Row="4" Grid.Column="0"
                                    Content="Troop Power Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
-                            <Label Grid.Row="5" Grid.Column="0"
+                                <Label Grid.Row="5" Grid.Column="0"
                                    Content="Highest Power Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
-                            <Label Grid.Row="6" Grid.Column="0"
+                                <Label Grid.Row="6" Grid.Column="0"
                                    Content="Tech Contributions Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
-                            <Label Grid.Row="7" Grid.Column="0"
+                                <Label Grid.Row="7" Grid.Column="0"
                                    Content="Defeat Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
-                            <Label Grid.Row="8" Grid.Column="0"
+                                <Label Grid.Row="8" Grid.Column="0"
                                    Content="Dismantle Durability Search: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Stretch" />
 
-                            <ComboBox Grid.Row="0" Grid.Column="1"
+                                <ComboBox Grid.Row="0" Grid.Column="1"
                                       Name="ServerSelectionComboBox"
                                       ItemsSource="{Binding}"
+                                      Padding="5"
+                                      Margin="5"
                                       VerticalAlignment="Stretch" />
-                            <TextBox Grid.Row="1" Grid.Column="1"
+                                <TextBox Grid.Row="1" Grid.Column="1"
                                      Name="NameSearchTextBox"
+                                     Padding="5"
+                                     Margin="5"
                                      VerticalAlignment="Stretch" />
-                            <ComboBox Grid.Row="2" Grid.Column="1"
+                                <ComboBox Grid.Row="2" Grid.Column="1"
                                       Name="AllianceSelectionComboBox"
                                       ItemsSource="{Binding}"
+                                      Padding="5"
+                                      Margin="5"
                                       VerticalAlignment="Stretch" />
-                            <ComboBox Grid.Row="3" Grid.Column="1"
+                                <ComboBox Grid.Row="3" Grid.Column="1"
                                       Name="RankSelectionComboBox"
                                       ItemsSource="{Binding}"
+                                      Padding="5"
+                                      Margin="5"
                                       VerticalAlignment="Stretch" />
-                            <TextBox Grid.Row="4" Grid.Column="1"
+                                <TextBox Grid.Row="4" Grid.Column="1"
                                      Name="TroopPowerSearchTextBox"
+                                     Padding="5"
+                                     Margin="5"
                                      VerticalAlignment="Stretch" />
-                            <TextBox Grid.Row="5" Grid.Column="1"
+                                <TextBox Grid.Row="5" Grid.Column="1"
                                      Name="HighestPowerSearchTextBox"
+                                     Padding="5"
+                                     Margin="5"
                                      VerticalAlignment="Stretch" />
-                            <TextBox Grid.Row="6" Grid.Column="1"
+                                <TextBox Grid.Row="6" Grid.Column="1"
                                      Name="TechContributionsSearchTextBox"
+                                     Padding="5"
+                                     Margin="5"
                                      VerticalAlignment="Stretch" />
-                            <TextBox Grid.Row="7" Grid.Column="1"
+                                <TextBox Grid.Row="7" Grid.Column="1"
                                      Name="DefeatSearchTextBox"
+                                     Padding="5"
+                                     Margin="5"
                                      VerticalAlignment="Stretch" />
-                            <TextBox Grid.Row="8" Grid.Column="1"
+                                <TextBox Grid.Row="8" Grid.Column="1"
                                      Name="DismantleDurabilitySearchTextBox"
+                                     Padding="5"
+                                     Margin="5"
                                      VerticalAlignment="Stretch" />
-                        </Grid>
-                        <Grid Grid.Row="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="25" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="25" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Row="1" Grid.Column="0" 
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="Time Filter Settings">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" 
                                    Content="Pick a date: "
+                                   Padding="5"
+                                   Margin="5"
                                    VerticalAlignment="Top"/>
-                            <DatePicker Grid.Row="1" Grid.Column="1" 
+                                    <DatePicker Grid.Row="0" Grid.Column="1" 
                                         Name="DatePicker"
+                                        Padding="5"
+                                        Margin="5"
                                         VerticalAlignment="Top">
-                                <DatePicker.BlackoutDates>
-                                    <CalendarDateRange 
+                                        <DatePicker.BlackoutDates>
+                                            <CalendarDateRange 
                                         Start="{x:Static System:DateTime.Today}"
                                         End="{x:Static System:DateTime.MaxValue}"/>
-                                </DatePicker.BlackoutDates>
-                            </DatePicker>
-                            <Button Grid.Row="3" Grid.Column="1"
-                                    Content="Filter"
-                                    VerticalAlignment="Stretch"
-                                    Click="FilterButton_OnClick"/>
+                                        </DatePicker.BlackoutDates>
+                                    </DatePicker>
+                                </Grid>
+                            </GroupBox>
+                            <Grid Grid.Row="2">
+                                <Button Content="Filter"
+                                        Padding="5"
+                                        Margin="5"
+                                        VerticalAlignment="Stretch"
+                                        Click="FilterButton_OnClick"/>
+                            </Grid>
                         </Grid>
-                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Graphs" />
